@@ -1,0 +1,16 @@
+footer{
+    border-top: 1px solid $primary-color;
+
+    .footer{
+
+        &__container{
+            @include wrapper-page;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            h5{
+                margin-bottom: 0;
+            }
+        }
+    }
+}

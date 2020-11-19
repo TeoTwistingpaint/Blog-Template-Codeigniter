@@ -1,0 +1,72 @@
+#login {
+	display: flex;
+	justify-content: center;
+
+	h1 {
+		text-align: center;
+	}
+
+	.login-box {
+		width: 400px;
+		padding: 40px;
+		box-sizing: border-box;
+		box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+        
+        p{
+            color: rgb(185, 54, 54);
+            text-align: center;
+        }
+
+		.user-box {
+			position: relative;
+			margin-bottom: 10px;
+
+			input {
+				width: 100%;
+				padding: 10px 0;
+				font-size: 16px;
+				color: $primary-color;
+				margin-bottom: 30px;
+				border: none;
+				border-bottom: 1px solid $primary-color;
+				outline: none;
+				background: transparent;
+			}
+
+			label {
+				padding: 10px 0 0;
+				font-weight: bold;
+				font-size: 16px;
+				color: $primary-color;
+				pointer-events: none;
+				transition: 0.5s;
+			}
+        }
+        
+        .btn-container{
+            text-align: center;
+        }
+		.form-submit {
+			background-color: transparent;
+			color: $primary-color;
+			padding: 10px 20px;
+			cursor: pointer;
+			border: 1px solid $primary-color;
+			text-transform: uppercase;
+			letter-spacing: 0.1rem;
+			font-weight: bold;
+			position: relative;
+			font-size: 15px;
+			-webkit-transition: all 0.3s;
+			-o-transition: all 0.3s;
+			transition: all 0.3s;
+
+			&:hover {
+				color: $secondary-color;
+				opacity: 1;
+                background-color: $primary-color;
+			}
+		}
+	}
+}

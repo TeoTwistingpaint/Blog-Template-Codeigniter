@@ -1,0 +1,22 @@
+/*
+*   COLORS
+*/
+$primary-color: black;
+$secondary-color: white;
+$theme-color: #1C1C1F;
+
+/*
+*   FONTS
+*/
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@600;700&display=swap');
+
+$title-font: 'Montserrat', sans-serif;
+$main-font: 'Lora', sans-serif;
+
+/*
+*   BREAKPOINT
+*/
+$large-desktop: 1440px;
+$small-desktop: 950px;
+$tablet: 768px;
+$mobile: 480px;
