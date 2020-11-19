@@ -15,8 +15,6 @@
         <label for="text">Text</label>
         <textarea name="text"></textarea>
 
-        <?php //echo "<input type='file' name='news_image' size='20' />"; 
-        ?>
         <label class="file">
             <input type="file" name='news_image' size='20' id="file" aria-label="File browser example">
             <span class="file-custom"></span>

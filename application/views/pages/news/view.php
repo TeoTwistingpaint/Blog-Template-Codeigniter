@@ -9,4 +9,14 @@
     <?php
     }
     ?>
+
+    <?php
+    // Se l'utente è loggato, mostra il bottone di edit
+    if ($this->session->userdata('logged_in')) {
+    ?>
+        <div class="edit-btn">
+            <a href="<?= $edit_url ?>">Modifica news</a>
+        </div>
+    <?php }
+    ?>
 </section>

@@ -23,7 +23,9 @@ class News_model extends CI_Model
         $this->load->helper('url');
 
         $slug = url_title($this->input->post('title'), 'dash', TRUE);
-        $image_name = $image_info['raw_name'] . "." . $image_info['image_type'];
+
+        // Verifico se è stata caricata anche l'immagine
+        $image_name = $image_info != NULL ? $image_info['raw_name'] . "." . $image_info['image_type'] : "";
 
         $data = array(
             'title' => $this->input->post('title'),

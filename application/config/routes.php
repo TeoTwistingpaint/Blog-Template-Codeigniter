@@ -53,6 +53,7 @@ $route['default_controller'] = 'home';
 $route['404_override'] = 'my404';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['news/edit'] = 'news/edit';
 $route['news/create'] = 'news/create';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
