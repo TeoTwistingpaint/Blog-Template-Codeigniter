@@ -52,17 +52,81 @@ class News extends CI_Controller
 
 		$data['menu'] = $this->menu->getMenu();
 
-		// Recupero il parametro dall'url per mostrare i dati della news
-		$news_slug = isset($_GET['news_slug']) && ($_GET['news_slug'] != NULL || $_GET['news_slug'] != "") ? $_GET['news_slug'] : NULL;
-		$data['news_item'] = $this->news_model->get_news($news_slug);
-
-		if (empty($data['news_item']) || $news_slug === NULL) {
+		/* if (empty($data['news_item']) || $news_slug === NULL) {
 			show_404();
-		}
+		} */
 
-		$this->load->view('template/header', $data);
-		$this->load->view('pages/news/edit', $data);
-		$this->load->view('template/footer');
+		$this->form_validation->set_rules('title', 'Title', 'required');
+		$this->form_validation->set_rules('text', 'Text');
+
+		if ($this->form_validation->run() === FALSE) {
+
+			// Recupero il parametro dall'url per mostrare i dati della news
+			$news_slug = isset($_GET['news_slug']) && ($_GET['news_slug'] != NULL || $_GET['news_slug'] != "") ? $_GET['news_slug'] : NULL;
+			$data['news_item'] = $this->news_model->get_news($news_slug);
+
+			if (empty($data['news_item']) || $news_slug === NULL) {
+				show_404();
+			}
+
+			$this->load->view('template/header', $data);
+			$this->load->view('pages/news/edit', $data);
+			$this->load->view('template/footer');
+		} else {
+
+			// Verifico se è stata caricata anche l'immagine per la news
+			/* if ($_FILES and $_FILES['news_image']['name']) {
+				$upload_res = $this->upload();
+
+				// Se l'upload del file è andato a buon fine, salvo nel db e rimando a view di success
+				if ($upload_res['status'] === true) {
+
+					$this->news_model->set_news($upload_res['message']);
+					$slug = url_title($this->input->post('title'), 'dash', TRUE);
+					$data['slug'] = $slug;
+
+					$this->load->view('template/header', $data);
+					$this->load->view('pages/news/edit', $data);
+					$this->load->view('template/footer');
+				}
+				// Altrimenti, verifica dati inseriti
+				else {
+					$data['error'] = $upload_res['message'];
+					$this->load->view('template/header', $data);
+					$this->load->view('pages/news/edit', $data);
+					$this->load->view('template/footer');
+				}
+			}
+
+			// Se non è stata caricata, salvo i dati nel db senza img
+			else { */
+			// Verifico se l'update è andato a buon fine
+			$slug_def = $this->news_model->update_news();
+			if ($slug_def != false) {
+				$data['result'] = array(
+					"message" => "News aggiornata con successo.",
+					"status" => true
+				);
+			} else {
+				$data['result'] = array(
+					"message" => "Errore durante l'aggiornamento, riprova più tardi.",
+					"status" => true
+				);
+			}
+
+			$data['news_item'] = $this->news_model->get_news($slug_def);
+
+			if (empty($data['news_item']) || $slug_def === NULL) {
+				show_404();
+			}
+
+			$data['slug'] = $slug_def;
+
+			$this->load->view('template/header', $data);
+			$this->load->view('pages/news/edit', $data);
+			$this->load->view('template/footer');
+			//}
+		}
 	}
 
 	private function upload()
@@ -129,9 +193,8 @@ class News extends CI_Controller
 				// Se l'upload del file è andato a buon fine, salvo nel db e rimando a view di success
 				if ($upload_res['status'] === true) {
 
-					$this->news_model->set_news($upload_res['message']);
-					$slug = url_title($this->input->post('title'), 'dash', TRUE);
-					$data['slug'] = $slug;
+					$slug_def = $this->news_model->set_news($upload_res['message']);
+					$data['slug'] = $slug_def != false ? $slug_def : "error";
 
 					$this->load->view('template/header', $data);
 					$this->load->view('pages/news/success', $data);
@@ -148,9 +211,8 @@ class News extends CI_Controller
 
 			// Se non è stata caricata, salvo i dati nel db senza img
 			else {
-				$this->news_model->set_news();
-				$slug = url_title($this->input->post('title'), 'dash', TRUE);
-				$data['slug'] = $slug;
+				$slug_def = $this->news_model->set_news();
+				$data['slug'] = $slug_def != false ? $slug_def : "error";
 
 				$this->load->view('template/header', $data);
 				$this->load->view('pages/news/success', $data);

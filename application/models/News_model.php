@@ -18,6 +18,72 @@ class News_model extends CI_Model
         return $query->row_array();
     }
 
+    private function get_unique_slug($slug, $counter = 1)
+    {
+        // Verifico se lo slug è disponibile
+        $slug_temp = $slug . "-" . $counter;
+        $query = $this->db->query("SELECT * FROM news WHERE slug = '{$slug_temp}'");
+
+        // Se non è disponibile, richiamo la funzione incrementando il counter
+        if ($query->num_rows() != 0) {
+            $counter += 1;
+            return $this->get_unique_slug($slug, $counter);
+        }
+        // Altrimenti ritorno il nuovo slug
+        else{
+            return $slug_temp;
+        }
+    }
+
+    public function update_news($image_info = NULL)
+    {
+        $this->load->helper('url');
+
+        // Recupero lo slug della news corrente
+        $slug = $_GET['news_slug'];
+
+        // Recupero le info della news
+        $news_item = $this->get_news($slug);
+
+        // Se il titolo della news è diverso, va aggiornato anche lo slug
+        if ($this->input->post('title') != $news_item['title']) {
+
+            // Verifico se il nuovo possibile slug della news esiste già nel db
+            $slug_temp = url_title($this->input->post('title'), 'dash', TRUE);
+            $query = $this->db->query("SELECT * FROM news WHERE slug = '{$slug_temp}'");
+
+            // Se esiste già una news con questo slug, creo nuovo slug
+            if ($query->num_rows() != 0) {
+                // Genero slug univoco
+                $slug = $this->get_unique_slug(url_title($this->input->post('title'), 'dash', TRUE), 1);
+            }
+            // Se lo slug non compare già nel db, posso usare il nuovo title della news
+            else {
+                $slug = url_title($this->input->post('title'), 'dash', TRUE);
+            }
+        }
+
+        // Verifico se è stata caricata anche l'immagine
+        $image_name = $image_info != NULL ? $image_info['raw_name'] . "." . $image_info['image_type'] : "";
+
+        // Se non è stata caricata l'immagine, devo aggiornare solo gli altri parametri
+        if ($image_name == "") {
+            $image_name = $news_item['image'];
+        }
+
+        $data = array(
+            'title' => $this->input->post('title'),
+            'slug' => $slug,
+            'text' => $this->input->post('text'),
+            'image' => $image_name
+        );
+
+        $this->db->where('id', $news_item['id']);
+        $this->db->update('news', $data);
+
+        return $slug;
+    }
+
     public function set_news($image_info = NULL)
     {
         $this->load->helper('url');
@@ -27,6 +93,14 @@ class News_model extends CI_Model
         // Verifico se è stata caricata anche l'immagine
         $image_name = $image_info != NULL ? $image_info['raw_name'] . "." . $image_info['image_type'] : "";
 
+        // Verifico se esiste già un record nel db con lo stesso slug
+        $query = $this->db->query("SELECT * FROM news WHERE slug = '{$slug}'");
+
+        if ($query->num_rows() != 0) {
+            // Genero slug univoco
+            $slug = $this->get_unique_slug($slug, 1);
+        }
+
         $data = array(
             'title' => $this->input->post('title'),
             'slug' => $slug,
@@ -34,6 +108,11 @@ class News_model extends CI_Model
             'image' => $image_name
         );
 
-        return $this->db->insert('news', $data);
+        // Se insert va a buon fine, ritorna lo slug della news, altrimenti errore
+        if ($this->db->insert('news', $data)) {
+            return $slug;
+        } else {
+            return false;
+        }
     }
 }
