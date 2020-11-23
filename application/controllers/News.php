@@ -131,7 +131,8 @@ class News extends CI_Controller
 		}
 	}
 
-	public function delete($news_slug = NULL){
+	public function delete($news_slug = NULL)
+	{
 		// Accedo alla view solo se loggato
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login', 'refresh');
@@ -202,15 +203,32 @@ class News extends CI_Controller
 		} else {
 
 			// Verifico se è stata caricata anche l'immagine per la news
-			/* if ($_FILES and $_FILES['news_image']['name']) {
+			if ($_FILES and $_FILES['news_image']['name']) {
 				$upload_res = $this->upload();
 
 				// Se l'upload del file è andato a buon fine, salvo nel db e rimando a view di success
 				if ($upload_res['status'] === true) {
 
-					$this->news_model->set_news($upload_res['message']);
-					$slug = url_title($this->input->post('title'), 'dash', TRUE);
-					$data['slug'] = $slug;
+					$slug_def = $this->news_model->update_news($upload_res['message']);
+					if ($slug_def != false) {
+						$data['result'] = array(
+							"message" => "News aggiornata con successo.",
+							"status" => true
+						);
+					} else {
+						$data['result'] = array(
+							"message" => "Errore durante l'aggiornamento, riprova più tardi.",
+							"status" => false
+						);
+					}
+
+					$data['news_item'] = $this->news_model->get_news($slug_def);
+
+					if (empty($data['news_item']) || $slug_def === NULL) {
+						show_404();
+					}
+
+					$data['slug'] = $slug_def;
 
 					$this->load->view('template/header', $data);
 					$this->load->view('pages/news/edit', $data);
@@ -224,35 +242,34 @@ class News extends CI_Controller
 					$this->load->view('template/footer');
 				}
 			}
-
 			// Se non è stata caricata, salvo i dati nel db senza img
-			else { */
-			// Verifico se l'update è andato a buon fine
-			$slug_def = $this->news_model->update_news();
-			if ($slug_def != false) {
-				$data['result'] = array(
-					"message" => "News aggiornata con successo.",
-					"status" => true
-				);
-			} else {
-				$data['result'] = array(
-					"message" => "Errore durante l'aggiornamento, riprova più tardi.",
-					"status" => false
-				);
+			else {
+				// Verifico se l'update è andato a buon fine
+				$slug_def = $this->news_model->update_news();
+				if ($slug_def != false) {
+					$data['result'] = array(
+						"message" => "News aggiornata con successo.",
+						"status" => true
+					);
+				} else {
+					$data['result'] = array(
+						"message" => "Errore durante l'aggiornamento, riprova più tardi.",
+						"status" => false
+					);
+				}
+
+				$data['news_item'] = $this->news_model->get_news($slug_def);
+
+				if (empty($data['news_item']) || $slug_def === NULL) {
+					show_404();
+				}
+
+				$data['slug'] = $slug_def;
+
+				$this->load->view('template/header', $data);
+				$this->load->view('pages/news/edit', $data);
+				$this->load->view('template/footer');
 			}
-
-			$data['news_item'] = $this->news_model->get_news($slug_def);
-
-			if (empty($data['news_item']) || $slug_def === NULL) {
-				show_404();
-			}
-
-			$data['slug'] = $slug_def;
-
-			$this->load->view('template/header', $data);
-			$this->load->view('pages/news/edit', $data);
-			$this->load->view('template/footer');
-			//}
 		}
 	}
 
