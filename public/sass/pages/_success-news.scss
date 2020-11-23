@@ -1,41 +1,6 @@
-#news {
-	p {
-		&.message {
-			&--correct {
-				color: $correct-color;
-			}
-
-			&--error {
-				color: $error-color;
-			}
-		}
-	}
-
-	.news {
-		&__container {
-			margin-bottom: 35px;
-		}
-
-		&__link {
-			display: inline-block;
-			width: auto;
-			margin-top: 20px;
-		}
-	}
-}
-
-#news-item {
-	h1 {
+#success {
+	h1{
 		text-align: center;
-		margin-bottom: 20px;
-	}
-	p {
-		text-align: center;
-	}
-	img {
-		max-width: 768px;
-		width: 100%;
-		margin-bottom: 20px;
 	}
 
 	.admin-actions {
@@ -47,6 +12,9 @@
 	}
 
 	.btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;	
 		width: auto;
 		flex-basis: 50%;
 		background-color: transparent;
@@ -64,7 +32,7 @@
 		-o-transition: all 0.3s;
 		transition: all 0.3s;
 
-		@media screen and (max-width: $mobile){
+		@media screen and (max-width: $mobile) {
 			flex-basis: 100%;
 		}
 
@@ -74,17 +42,9 @@
 			background-color: $primary-color;
 		}
 
-		&--delete {
-			background-color: $secondary-color;
-			color: $error-color;
-
-			@media screen and (max-width: $mobile){
+		&:nth-child(2){
+			@media screen and (max-width: $mobile) {
 				margin-top: 20px;
-			}
-
-			&:hover {
-				color: $secondary-color;
-				background-color: $error-color;
 			}
 		}
 	}
