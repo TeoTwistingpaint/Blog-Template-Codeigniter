@@ -19,14 +19,17 @@
         <label for="text">Text</label>
         <textarea name="text"><?= $news_item['text'] ?></textarea>
 
-        <!-- <?php if ($news_item['image'] == "") { ?>
+        <?php if ($news_item['image'] == "") { ?>
             <label class="file">
                 <input type="file" name='news_image' size='20' id="file" aria-label="File browser example">
                 <span class="file-custom"></span>
             </label>
         <?php } else { ?>
-            <a class="remove-img" href="news/remove">Rimuovi immagine</a>
-        <?php } ?> -->
+            <div class="img-container">
+                <img src="<?php echo base_url('/upload/') . $news_item['image'] ?>" />
+                <a class="remove-img" href="/news/delimage?news_slug=<?= $news_item['slug'] ?>">Rimuovi immagine</a>
+            </div>
+        <?php } ?>
 
         <div class="btn-container">
             <input class="form-submit" type="submit" name="submit" value="Aggiorna news" />

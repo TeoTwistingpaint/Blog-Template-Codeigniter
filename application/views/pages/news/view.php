@@ -17,6 +17,10 @@
         <div class="edit-btn">
             <a href="<?= $edit_url ?>">Modifica news</a>
         </div>
+
+        <div class="edit-btn">
+            <a href="/news/delete?news_slug=<?= $news_item['slug'] ?>">Elimina news</a>
+        </div>
     <?php }
     ?>
 </section>

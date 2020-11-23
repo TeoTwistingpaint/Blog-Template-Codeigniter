@@ -30,8 +30,59 @@ class News_model extends CI_Model
             return $this->get_unique_slug($slug, $counter);
         }
         // Altrimenti ritorno il nuovo slug
-        else{
+        else {
             return $slug_temp;
+        }
+    }
+
+    public function delete_image($slug = NULL)
+    {
+        // Recupero le info della news
+        $news_item = $this->get_news($slug);
+
+        // Rimuovo l'img dal db
+        $where_clause = array('id' => $news_item['id'], 'slug' => $slug);
+        $update_data = array("image" => "");
+        $this->db->where($where_clause);
+        $res = $this->db->update("news", $update_data);
+
+        // Se il campo viene aggiornato correttamente nel db e l'immagine viene rimossa dalla cartella, ritorno true
+        if ($res && unlink("upload/" . $news_item['image'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function set_news($image_info = NULL)
+    {
+        $this->load->helper('url');
+
+        $slug = url_title($this->input->post('title'), 'dash', TRUE);
+
+        // Verifico se è stata caricata anche l'immagine
+        $image_name = $image_info != NULL ? $image_info['raw_name'] . "." . $image_info['image_type'] : "";
+
+        // Verifico se esiste già un record nel db con lo stesso slug
+        $query = $this->db->query("SELECT * FROM news WHERE slug = '{$slug}'");
+
+        if ($query->num_rows() != 0) {
+            // Genero slug univoco
+            $slug = $this->get_unique_slug($slug, 1);
+        }
+
+        $data = array(
+            'title' => $this->input->post('title'),
+            'slug' => $slug,
+            'text' => $this->input->post('text'),
+            'image' => $image_name
+        );
+
+        // Se insert va a buon fine, ritorna lo slug della news, altrimenti errore
+        if ($this->db->insert('news', $data)) {
+            return $slug;
+        } else {
+            return false;
         }
     }
 
@@ -84,35 +135,32 @@ class News_model extends CI_Model
         return $slug;
     }
 
-    public function set_news($image_info = NULL)
+    public function delete_news($news_item = NULL)
     {
-        $this->load->helper('url');
+        // Verifica se la news ha un'immagine associata
+        if ($news_item['image'] != "" && $news_item['image'] != NULL) {
 
-        $slug = url_title($this->input->post('title'), 'dash', TRUE);
+            // Cancello l'immagine dalla cartella, se andato a buon fine, proseguo con la cancellazione news
+            if (unlink("upload/" . $news_item['image'])) {
 
-        // Verifico se è stata caricata anche l'immagine
-        $image_name = $image_info != NULL ? $image_info['raw_name'] . "." . $image_info['image_type'] : "";
-
-        // Verifico se esiste già un record nel db con lo stesso slug
-        $query = $this->db->query("SELECT * FROM news WHERE slug = '{$slug}'");
-
-        if ($query->num_rows() != 0) {
-            // Genero slug univoco
-            $slug = $this->get_unique_slug($slug, 1);
+                // Se cancello il record nel db, ritorna true
+                if ($this->db->delete('news', array('id' => $news_item['id'], 'slug' => $news_item['slug']))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
-
-        $data = array(
-            'title' => $this->input->post('title'),
-            'slug' => $slug,
-            'text' => $this->input->post('text'),
-            'image' => $image_name
-        );
-
-        // Se insert va a buon fine, ritorna lo slug della news, altrimenti errore
-        if ($this->db->insert('news', $data)) {
-            return $slug;
-        } else {
-            return false;
+        // Se non ha un'immagine associata, cancello dal db la news
+        else {
+            // Se cancello il record nel db, ritorna true
+            if ($this->db->delete('news', array('id' => $news_item['id'], 'slug' => $news_item['slug']))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

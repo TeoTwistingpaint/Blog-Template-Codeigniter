@@ -11,6 +11,21 @@
 		flex-basis: 100%;
 	}
 
+	.img-container{
+		position: relative;
+		font-size: 0;
+
+		.remove-img{
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			background-color: rgb(185, 54, 54);
+			padding: 10px 15px;
+			color: white;
+			font-size: 13px;
+		}
+	}
+
 	.create-box {
 		p {
 			color: rgb(185, 54, 54);
