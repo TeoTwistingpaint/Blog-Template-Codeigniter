@@ -11,10 +11,14 @@
 		padding: 40px;
 		box-sizing: border-box;
 		box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-        border-radius: 10px;
+		border-radius: 10px;
+		
+		@media screen and (max-width: $mobile){
+			padding: 30px;
+		}
         
         p{
-            color: rgb(185, 54, 54);
+            color: $error-color;
             text-align: center;
         }
 

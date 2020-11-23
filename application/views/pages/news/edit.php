@@ -13,10 +13,10 @@
 
         <?php echo form_open_multipart("news/edit?news_slug={$news_item['slug']}"); ?>
 
-        <label for="title">Title</label>
+        <label for="title">Titolo</label>
         <input type="input" name="title" value="<?= $news_item['title'] ?>" />
 
-        <label for="text">Text</label>
+        <label for="text">Testo</label>
         <textarea name="text"><?= $news_item['text'] ?></textarea>
 
         <?php if ($news_item['image'] == "") { ?>
@@ -37,6 +37,4 @@
 
         </form>
     </div>
-
-    <a class="logout" href="/login/logout">Logout</a>
 </section>

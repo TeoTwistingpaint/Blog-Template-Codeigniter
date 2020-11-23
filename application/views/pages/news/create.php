@@ -9,10 +9,10 @@
 
         <?php echo form_open_multipart('news/create'); ?>
 
-        <label for="title">Title</label>
+        <label for="title">Titolo</label>
         <input type="input" name="title" />
 
-        <label for="text">Text</label>
+        <label for="text">Testo</label>
         <textarea name="text"></textarea>
 
         <label class="file">
@@ -21,11 +21,13 @@
         </label>
 
         <div class="btn-container">
-            <input class="form-submit" type="submit" name="submit" value="Create news item" />
+            <input class="form-submit" type="submit" name="submit" value="Crea" />
         </div>
 
         </form>
     </div>
 
-    <a class="logout" href="/login/logout">Logout</a>
+    <div class="logout-container">
+        <a class="logout" href="/login/logout">Logout</a>
+    </div>
 </section>
